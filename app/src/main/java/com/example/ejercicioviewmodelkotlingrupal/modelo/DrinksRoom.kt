@@ -8,22 +8,23 @@ import androidx.room.RoomDatabase
 
 @Database(entities = arrayOf(Drinks::class), version = 0)
 
-abstract class DrinksRoom(application: Application): RoomDatabase(){
+abstract class DrinksRoomDB: RoomDatabase() {
 
     abstract fun getDao(): DaoDrink
 
+    companion object {
+        var db: DrinksRoomDB? = null
+        private val dbName: String = "drinker_DB"
 
-    companion object{
-        var db: DrinksRoom? = null
-        private val dbName:String = "Drinker_DB"
+        fun getDB(context: Context): DrinksRoomDB {
+            if (db != null)
+                return db!!
 
-        fun getDB(context: Context):DrinksRoom{
-            if (db ! = null)
-            return db!!
-
-            synchronized(this){
-                db = Room.databaseBuilder(context, DrinksRoom::class.java, dbName).build()
+            synchronized(this) {
+                db = Room.databaseBuilder(context, DrinksRoomDB::class.java, dbName).build()
+                return db!!
             }
         }
     }
+
 }
